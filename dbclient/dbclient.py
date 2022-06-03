@@ -93,6 +93,25 @@ class dbclient:
         else:
             return {'http_status_code': raw_results.status_code}
 
+    def patch(self, endpoint, json_params={}, print_json=False, version='2.0'):
+        if version:
+            ver = version
+        if json_params:
+            raw_results = requests.patch(self._url + '/api/{0}'.format(ver) + endpoint, headers=self._token,
+                                        json=json_params)
+            results = raw_results.json()
+        else:
+            raw_results = requests.patch(self._url + '/api/{0}'.format(ver) + endpoint, headers=self._token)
+            results = raw_results.json()
+        if print_json:
+            print(json.dumps(results, indent=4, sort_keys=True))
+        # if results are empty, let's return the return status
+        if results:
+            results['http_status_code'] = raw_results.status_code
+            return results
+        else:
+            return {'http_status_code': raw_results.status_code}
+
     def delete(self, endpoint, json_params={}, printJson=False, version='2.0'):
         if version:
             ver = version
